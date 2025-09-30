@@ -5,7 +5,7 @@ metadata:
   labels:
     app: pipecd-tutorial-simple
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: pipecd-tutorial-simple

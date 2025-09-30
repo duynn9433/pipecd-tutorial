@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: canary
+  name: analysis-by-log
 spec:
   selector:
-    app: canary
+    app: analysis-by-log
   ports:
     - protocol: TCP
       port: 9085

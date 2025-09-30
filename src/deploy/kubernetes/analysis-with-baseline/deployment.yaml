@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: canary
+  name: analysis-with-baseline
   labels:
-    app: canary
+    app: analysis-with-baseline
 spec:
   replicas: 2
-  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: canary
+      app: analysis-with-baseline
       pipecd.dev/variant: primary
   template:
     metadata:
       labels:
-        app: canary
+        app: analysis-with-baseline
         pipecd.dev/variant: primary
     spec:
       containers:
       - name: helloworld
-        image: ghcr.io/pipe-cd/helloworld:v0.32.0
+        image: ghcr.io/pipe-cd/helloworld:v0.30.0
         args:
           - server
         ports:

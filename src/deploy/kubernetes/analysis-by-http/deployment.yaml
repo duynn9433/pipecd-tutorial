@@ -1,20 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: canary
+  name: analysis-by-http
   labels:
-    app: canary
+    app: analysis-by-http
 spec:
   replicas: 2
-  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: canary
+      app: analysis-by-http
       pipecd.dev/variant: primary
   template:
     metadata:
       labels:
-        app: canary
+        app: analysis-by-http
         pipecd.dev/variant: primary
     spec:
       containers:

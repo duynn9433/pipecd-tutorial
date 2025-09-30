@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: canary
+  name: multi-steps-canary
 spec:
   selector:
-    app: canary
+    app: multi-steps-canary
   ports:
     - protocol: TCP
       port: 9085

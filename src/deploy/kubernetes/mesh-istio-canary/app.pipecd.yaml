@@ -1,7 +1,7 @@
 apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
-  name: canary
+  name: mesh-istio-canary
   labels:
     env: example
     team: product
@@ -12,14 +12,27 @@ spec:
       - name: K8S_CANARY_ROLLOUT
         with:
           replicas: 10%
-      # Wait 10 seconds before going to the next stage.
-      - name: WAIT
+      # The percentage of traffic each variant should receive.
+      # In this case, CANARY variant will receive 10% of traffic,
+      # while PRIMARY will receive 90% of traffic.
+      - name: K8S_TRAFFIC_ROUTING
         with:
-          duration: 10s
+          primary: 90
+          canary: 10
+      - name: WAIT_APPROVAL
       # Update the workload of PRIMARY variant to the new version.
       - name: K8S_PRIMARY_ROLLOUT
+      # The percentage of traffic each variant should receive.
+      # In this case, PRIMARY variant will receive all of the traffic.
+      - name: K8S_TRAFFIC_ROUTING
+        with:
+          primary: 100
       # Destroy all workloads of CANARY variant.
       - name: K8S_CANARY_CLEAN
+  trafficRouting:
+    method: istio
+    istio:
+      host: mesh-istio-canary.default.svc.cluster.local
   description: |
-    This app demonstrates how to deploy a Kubernetes app by Canary strategy without requering any mesh.\
+    This app demonstrates how to deploy a Kubernetes app with Canary strategy by using Istio mesh.\
     References: [adding a new app](https://pipecd.dev/docs/user-guide/managing-application/adding-an-application/), [app configuration](https://pipecd.dev/docs/user-guide/configuration-reference/)

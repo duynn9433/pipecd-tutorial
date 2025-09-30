@@ -1,20 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: canary
+  name: analysis-by-log
   labels:
-    app: canary
+    app: analysis-by-log
 spec:
   replicas: 2
-  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: canary
+      app: analysis-by-log
       pipecd.dev/variant: primary
   template:
     metadata:
       labels:
-        app: canary
+        app: analysis-by-log
         pipecd.dev/variant: primary
     spec:
       containers:

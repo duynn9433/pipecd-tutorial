@@ -1,25 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: canary
+  name: mesh-istio-canary
   labels:
-    app: canary
+    app: mesh-istio-canary
 spec:
   replicas: 2
-  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: canary
+      app: mesh-istio-canary
       pipecd.dev/variant: primary
   template:
     metadata:
       labels:
-        app: canary
+        app: mesh-istio-canary
         pipecd.dev/variant: primary
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
       - name: helloworld
-        image: ghcr.io/pipe-cd/helloworld:v0.32.0
+        image: ghcr.io/pipe-cd/helloworld:v0.30.0
         args:
           - server
         ports:

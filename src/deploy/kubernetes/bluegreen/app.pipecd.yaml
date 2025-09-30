@@ -1,14 +1,30 @@
 apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
-  name: bluegreen-demo
-  project: tutorial
-  repo: tutorial-repo
-  path: src/deploy/kubernetes/bluegreen
-  platformProvider: my-kubernetes
-  strategy:
-    type: BLUE_GREEN
-    blueServiceSelector:
-      app: blue
-    greenServiceSelector:
-      app: green
+  name: bluegreen-app
+  input:
+    manifests:
+      - deployment-blue.yaml
+      - deployment-green.yaml
+      - service.yaml
+    kubectlVersion: 1.18.5
+  pipeline:
+    stages:
+      - name: K8S_BLUE_GREEN_ROLLOUT
+        with:
+          activeServiceSelector:
+            app: green
+      - name: WAIT
+        with:
+          duration: 10s
+      - name: K8S_BLUE_GREEN_SWITCH
+        with:
+          activeServiceSelector:
+            app: blue
+      - name: K8S_BLUE_GREEN_CLEAN
+        with:
+          inactiveServiceSelector:
+            app: green
+  description: |
+    This app demonstrates Blue-Green deployment strategy with Pipecd.
+    See: https://pipecd.dev/docs/user-guide/configuration-reference/#blue-green-deployment

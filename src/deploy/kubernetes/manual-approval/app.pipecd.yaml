@@ -1,14 +1,20 @@
 apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
-  name: manual-approval-demo
-  project: tutorial
-  repo: tutorial-repo
-  path: src/deploy/kubernetes/manual-approval
-  platformProvider: my-kubernetes
-  strategy:
-    type: CANARY
-    steps:
-      - weight: 20
-      - approval: true
-      - weight: 100
+  name: manual-approval-app
+  input:
+    manifests:
+      - deployment.yaml
+      - service.yaml
+    kubectlVersion: 1.18.5
+  pipeline:
+    stages:
+      - name: K8S_CANARY_ROLLOUT
+        with:
+          replicas: 20%
+      - name: WAIT_APPROVAL
+      - name: K8S_PRIMARY_ROLLOUT
+      - name: K8S_CANARY_CLEAN
+  description: |
+    This app demonstrates manual approval in canary deployment with Pipecd.
+    See: https://pipecd.dev/docs/user-guide/configuration-reference/#canary-deployment

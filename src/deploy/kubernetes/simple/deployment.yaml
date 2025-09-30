@@ -5,7 +5,7 @@ metadata:
   labels:
     app: pipecd-tutorial-simple
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: pipecd-tutorial-simple
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: ghcr.io/pipe-cd/helloworld:v0.32.0
+        image: ghcr.io/pipe-cd/helloworld:v0.31.0
         args:
           - server
         ports:

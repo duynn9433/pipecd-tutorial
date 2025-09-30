@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manual-approval-demo
+  labels:
+    app: manual-approval
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: manual-approval
+  template:
+    metadata:
+      labels:
+        app: manual-approval
+    spec:
+      containers:
+      - name: manual-approval-demo
+        image: nginx:1.21
+        ports:
+        - containerPort: 80

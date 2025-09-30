@@ -1,0 +1,14 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: manual-approval-demo
+  project: tutorial
+  repo: tutorial-repo
+  path: src/deploy/kubernetes/manual-approval
+  platformProvider: my-kubernetes
+  strategy:
+    type: CANARY
+    steps:
+      - weight: 20
+      - approval: true
+      - weight: 100

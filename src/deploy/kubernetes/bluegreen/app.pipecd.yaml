@@ -1,0 +1,14 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: bluegreen-demo
+  project: tutorial
+  repo: tutorial-repo
+  path: src/deploy/kubernetes/bluegreen
+  platformProvider: my-kubernetes
+  strategy:
+    type: BLUE_GREEN
+    blueServiceSelector:
+      app: blue
+    greenServiceSelector:
+      app: green

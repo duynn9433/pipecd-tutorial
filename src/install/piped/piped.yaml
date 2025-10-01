@@ -17,4 +17,5 @@ spec:
       config:
         kubeconfigPath: /Users/duynn/.kube/config
         # Your piped will connect to your cluster with this config.
-
+    - name: my-generic
+      type: GENERIC

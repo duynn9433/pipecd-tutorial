@@ -1,0 +1,24 @@
+apiVersion: pipecd.dev/v1beta1
+kind: KubernetesApp
+spec:
+  name: my-java-jar-runner
+  platformProvider: my-kubernetes
+  labels:
+    env: demo
+  planner:
+    alwaysUsePipeline: true
+
+  pipeline:
+    stages:
+      - name: StopOldApp
+        with:
+          run: ./scripts/stop.sh
+
+      - name: FetchArtifact
+        with:
+          run: ./scripts/fetch.sh
+
+      - name: StartNewApp
+        with:
+          run: ./scripts/start.sh
+        onRollback: ./scripts/start.sh rollback

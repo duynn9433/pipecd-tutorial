@@ -9,6 +9,7 @@ spec:
   description: "Demonstrates using SCRIPT_RUN stages to manage a non-Kubernetes app (Docker container or raw JAR)"
   planner:
     alwaysUsePipeline: true
+  
   input:
     manifests:
       - configmap.yaml

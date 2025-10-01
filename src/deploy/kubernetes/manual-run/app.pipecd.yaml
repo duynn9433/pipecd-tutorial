@@ -2,23 +2,35 @@ apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
   name: my-java-jar-runner
-  platformProvider: my-kubernetes
   labels:
     env: demo
+    type: external-runtime
+  description: "Demonstrates using SCRIPT_RUN stages to manage a non-Kubernetes app (Docker container or raw JAR)"
   planner:
     alwaysUsePipeline: true
-
   pipeline:
     stages:
-      - name: StopOldApp
+      - name: SCRIPT_RUN
+        desc: Stop old process / container if running
         with:
-          run: ./scripts/stop.sh
-
-      - name: FetchArtifact
+          env:
+            STEP: stop
+          run: |
+            ./scripts/stop.sh
+      - name: SCRIPT_RUN
+        desc: Fetch new artifact (download jar or pull image)
         with:
-          run: ./scripts/fetch.sh
-
-      - name: StartNewApp
+          env:
+            STEP: fetch
+          run: |
+            ./scripts/fetch.sh
+      - name: SCRIPT_RUN
+        desc: Start new process
         with:
-          run: ./scripts/start.sh
-        onRollback: ./scripts/start.sh rollback
+          env:
+            STEP: start
+          run: |
+            ./scripts/start.sh
+          onRollback: |
+            echo "[PIPELINE] Rolling back -> restarting previous version";
+            ./scripts/start.sh rollback

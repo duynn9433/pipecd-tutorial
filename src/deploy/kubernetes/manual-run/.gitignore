@@ -1,0 +1,5 @@
+artifacts/
+app.pid
+current_version.txt
+previous_version.txt
+current_version.txt.pending

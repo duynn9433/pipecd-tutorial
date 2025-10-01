@@ -2,12 +2,17 @@ apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
   name: my-java-jar-runner
+  platformProvider: my-kubernetes
   labels:
     env: demo
     type: external-runtime
   description: "Demonstrates using SCRIPT_RUN stages to manage a non-Kubernetes app (Docker container or raw JAR)"
   planner:
     alwaysUsePipeline: true
+  input:
+    manifests:
+      - configmap.yaml
+    kubectlVersion: 1.32.2
   pipeline:
     stages:
       - name: SCRIPT_RUN

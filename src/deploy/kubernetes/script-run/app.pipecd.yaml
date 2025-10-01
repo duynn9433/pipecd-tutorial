@@ -7,12 +7,12 @@ spec:
     team: product
   pipeline:
     stages:
-      - name: K8S_CANARY_ROLLOUT
-        with:
-          replicas: 10%
-      - name: WAIT
-        with:
-          duration: 10s
+      # - name: K8S_CANARY_ROLLOUT
+      #   with:
+      #     replicas: 10%
+      # - name: WAIT
+      #   with:
+      #     duration: 10s
       - name: SCRIPT_RUN
         with:
           env:
@@ -24,5 +24,5 @@ spec:
           onRollback: |
             echo $R_MSG
             sleep 10
-      - name: K8S_PRIMARY_ROLLOUT
-      - name: K8S_CANARY_CLEAN
+      # - name: K8S_PRIMARY_ROLLOUT
+      # - name: K8S_CANARY_CLEAN

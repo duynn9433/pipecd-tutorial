@@ -2,13 +2,9 @@ apiVersion: pipecd.dev/v1beta1
 kind: KubernetesApp
 spec:
   name: script-run
-  platformProvider: my-kubernetes
   labels:
     env: example
     team: product
-  description: "Canary + script stage example. Runs a simple script between canary and primary rollout."
-  planner:
-    alwaysUsePipeline: true
   pipeline:
     stages:
       - name: K8S_CANARY_ROLLOUT
@@ -23,14 +19,10 @@ spec:
             MSG: "execute script1"
             R_MSG: "rollback script1"
           run: |
-            echo "=== SCRIPT_RUN BEGIN $(date -u +%FT%TZ) ==="
             echo $MSG
             sleep 10
-            echo "=== SCRIPT_RUN END ==="
           onRollback: |
-            echo "=== SCRIPT_RUN ROLLBACK BEGIN $(date -u +%FT%TZ) ==="
             echo $R_MSG
             sleep 10
-            echo "=== SCRIPT_RUN ROLLBACK END ==="
       - name: K8S_PRIMARY_ROLLOUT
       - name: K8S_CANARY_CLEAN

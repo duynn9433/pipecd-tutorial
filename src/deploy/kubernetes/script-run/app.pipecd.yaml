@@ -5,24 +5,80 @@ spec:
   labels:
     env: example
     team: product
+  description: "Pipeline only executes external scripts (no K8S rollout). Demonstrates using SCRIPT_RUN for out-of-cluster ops."
+  planner:
+    alwaysUsePipeline: true
   pipeline:
     stages:
-      # - name: K8S_CANARY_ROLLOUT
-      #   with:
-      #     replicas: 10%
-      # - name: WAIT
-      #   with:
-      #     duration: 10s
       - name: SCRIPT_RUN
+        desc: Prepare environment (simulate build / prechecks)
         with:
           env:
-            MSG: "execute script1"
-            R_MSG: "rollback script1"
+            STEP: prepare
+            MSG: "[PREPARE] Running pre-deploy tasks"
+            R_MSG: "[PREPARE-ROLLBACK] Undo pre-deploy tasks"
           run: |
-            echo $MSG
-            sleep 10
+            echo "=== $STEP BEGIN $(date -u +%FT%TZ) ==="
+            echo "$MSG"
+            echo "Simulating build..."
+            sleep 2
+            echo "Lint OK"
+            echo "Unit tests OK"
+            echo "=== $STEP END ==="
           onRollback: |
-            echo $R_MSG
-            sleep 10
-      # - name: K8S_PRIMARY_ROLLOUT
-      # - name: K8S_CANARY_CLEAN
+            echo "=== $STEP ROLLBACK BEGIN $(date -u +%FT%TZ) ==="
+            echo "$R_MSG"
+            echo "Cleaning temporary artifacts"
+            sleep 1
+            echo "=== $STEP ROLLBACK END ==="
+      - name: SCRIPT_RUN
+        desc: Deploy external service (simulate remote commands)
+        with:
+          env:
+            STEP: deploy
+            MSG: "[DEPLOY] Deploying external service version v1"
+            R_MSG: "[DEPLOY-ROLLBACK] Reverting to previous version"
+          run: |
+            echo "=== $STEP BEGIN $(date -u +%FT%TZ) ==="
+            echo "$MSG"
+            echo "Connecting to remote host..."
+            sleep 1
+            echo "Uploading package..."
+            sleep 1
+            echo "Restarting process..."
+            sleep 2
+            echo "Process started with PID 12345 (simulated)"
+            echo "=== $STEP END ==="
+          onRollback: |
+            echo "=== $STEP ROLLBACK BEGIN $(date -u +%FT%TZ) ==="
+            echo "$R_MSG"
+            echo "Stopping new process..."
+            sleep 1
+            echo "Restoring previous package..."
+            sleep 2
+            echo "Previous process restarted"
+            echo "=== $STEP ROLLBACK END ==="
+      - name: SCRIPT_RUN
+        desc: Post-deploy verification (simulate health checks)
+        with:
+          env:
+            STEP: verify
+            MSG: "[VERIFY] Running smoke checks"
+            R_MSG: "[VERIFY-ROLLBACK] Rolling back due to failed verification"
+          run: |
+            echo "=== $STEP BEGIN $(date -u +%FT%TZ) ==="
+            echo "$MSG"
+            echo "Checking TCP port... OK"
+            sleep 1
+            echo "HTTP /health -> 200 OK"
+            sleep 1
+            echo "Latency p95 < 150ms"
+            echo "All smoke checks passed"
+            echo "=== $STEP END ==="
+          onRollback: |
+            echo "=== $STEP ROLLBACK BEGIN $(date -u +%FT%TZ) ==="
+            echo "$R_MSG"
+            echo "Triggering deploy rollback logic (placeholder)"
+            sleep 1
+            echo "Rollback complete"
+            echo "=== $STEP ROLLBACK END ==="
